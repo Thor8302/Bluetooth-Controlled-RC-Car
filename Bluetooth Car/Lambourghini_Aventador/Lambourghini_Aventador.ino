@@ -1,14 +1,15 @@
-//                    ghini 30/11/2020 :- front led better , bluetooth fixed for wired connection from outside the car , hc-05 name and password changed.
+//                               ghini :- 3:26 24/12/2020 .. steering power manupulator I
 char t;
-int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0;
-int s=0,speed=0; 
+int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0,steer=0;
+int s=0,speed=0,steerspead=0; 
 void setup() {
-pinMode(2,OUTPUT);   //left motors forward
-pinMode(3,OUTPUT);   //left motors reverse
+pinMode(2,OUTPUT);   //forward
+pinMode(3,OUTPUT);   // reverse
 pinMode(4,OUTPUT);   //right motors forward
 pinMode(5,OUTPUT);   //right motors reverse
 pinMode(10,OUTPUT);  //accelerator
-pinMode(6,INPUT);    //from motordrive to switch on bluetooth
+pinMode(6,OUTPUT);   //steering power manupulator
+pinMode(A1,INPUT);    //from motordrive to switch on bluetooth
 pinMode(7,OUTPUT);   //bluetooth on/off
 pinMode(8,OUTPUT);   //front light on/off
 Serial.begin(9600);
@@ -35,6 +36,10 @@ if(t == 'F'){            //move forward(all motors rotate in forward direction)
   flght=1;
   m=0;
   n=0;
+  steer=0;
+  if(speed==255)
+  digitalWrite(10,1);
+  else
   analogWrite(10,speed);
 }
  
@@ -45,79 +50,101 @@ else if(t == 'B'){      //move reverse (all motors rotate in reverse direction)
   digitalWrite(2,LOW);
   digitalWrite(8,LOW);
   fcnt=100;
+  steer=0;
   flght=0;
   m=0;
   n=0;
+  if(speed==255)
+  digitalWrite(10,1);
+  else
   analogWrite(10,speed);
 }
  
-else if(t == 'L'){//turn right (left side motors rotate in forward direction, right side motors doesn't rotate)
+else if(t == 'L'){ //left
   digitalWrite(2,m);
   digitalWrite(3,m);
   digitalWrite(4,HIGH);
   digitalWrite(5,LOW);
   //digitalWrite(8,LOW);
   m=0;
+  steer=steer+1;
   n=0;
 }
  
-else if(t == 'R'){      //turn left (right side motors rotate in forward direction, left side motors doesn't rotate)
+else if(t == 'R'){  //right    
   digitalWrite(2,m);
   digitalWrite(3,m);
   digitalWrite(5,HIGH);
   digitalWrite(4,LOW);
   //digitalWrite(8,LOW);
   m=0;
+  steer=steer+1;
   n=0;
 }
 
-else if(t == 'G'){    
+else if(t == 'G'){    //forward left
   digitalWrite(2,HIGH);
   digitalWrite(4,HIGH);
   digitalWrite(3,LOW);
   digitalWrite(5,LOW);
   digitalWrite(8,HIGH);
   fcnt=0;
+  steer=steer+1;
   flght=1;
   m=0;
   n=0;
+  if(speed==255)
+  digitalWrite(10,1);
+  else
   analogWrite(10,speed);
 }
-else if(t == 'I'){
+else if(t == 'I'){  //forward right
   digitalWrite(3,LOW);
   digitalWrite(2,HIGH);
   digitalWrite(5,HIGH);
   digitalWrite(4,LOW);
   digitalWrite(8,HIGH);
   fcnt=0;
+  steer=steer+1;
   flght=1;
   m=0;
   n=0;
+  if(speed==255)
+  digitalWrite(10,1);
+  else
   analogWrite(10,speed);
 }
- else if(t=='H'){
+ else if(t=='H'){   //backward left
    digitalWrite(3,HIGH);
    digitalWrite(2,LOW);
    digitalWrite(4,HIGH);
    digitalWrite(5,LOW);
    digitalWrite(8,LOW);
    fcnt=100;
+   steer=steer+1;
    flght=0;
    m=0;
    n=0;
-   analogWrite(10,speed);
+   if(speed==255)
+  digitalWrite(10,1);
+  else
+  analogWrite(10,speed);
  }
- else if(t=='J'){
+ else if(t=='J'){   //backward right
    digitalWrite(5,HIGH);
    digitalWrite(4,LOW);
    digitalWrite(3,HIGH);
    digitalWrite(2,LOW);
    digitalWrite(8,LOW);
    fcnt=100;
+   steer=steer+1;
    flght=0;
    m=0;
    n=0;
-   analogWrite(10,speed);
+   if(speed==255)
+  digitalWrite(10,1);
+  else
+  analogWrite(10,speed);
  }
 else if(t == 'S'){      //STOP (all motors stop)
   digitalWrite(2,m);
@@ -126,20 +153,23 @@ else if(t == 'S'){      //STOP (all motors stop)
   digitalWrite(4,LOW);
   digitalWrite(5,LOW);
   n=0;
+  steer=0;
 }
-else if(t=='W'){
+else if(t=='W'){   //lights on
   flght=1;
   m=1;
+  steer=0;
   n=0;
   analogWrite(10,255);
 }
-else if(t=='w'){
+else if(t=='w'){   // lights off
   flght=0;
+  steer=0;
   m=0;
   n=0;
   analogWrite(10,0);
 }
-else if(t=='V'||t=='v'){
+else if(t=='V'||t=='v'){  // emergency all off
   digitalWrite(2,LOW);
   digitalWrite(3,LOW);
   digitalWrite(4,LOW);
@@ -147,13 +177,15 @@ else if(t=='V'||t=='v'){
   digitalWrite(8,LOW);
   n=0;
   m=0;
-  analogWrite(10,0);
+  steer=0;
+  digitalWrite(10,0);
 }
-else if(t=='a'){
+else if(t=='a'){   // no signal then off
   n=n+1;
   if(n>=20){
     n=0;
     m=0;
+    steer=0;
     digitalWrite(2,LOW);
     digitalWrite(3,LOW);
     digitalWrite(4,LOW);
@@ -185,8 +217,8 @@ else
 {
   flght=m;
 }
-mtrdrv=digitalRead(6);  //reading input at 6 coming from motordrive's 5volt
-if(mtrdrv==0)           //if yes switch on bluetooth 
+mtrdrv=analogRead(A1);  //reading input at A1 coming from motordrive's 5volt
+if(mtrdrv<=100)           //if <=200 switch off bluetooth on count of 100
 {
   mtrcnt=mtrcnt+1;
   if(mtrcnt>=10)
@@ -194,11 +226,18 @@ if(mtrdrv==0)           //if yes switch on bluetooth
     digitalWrite(7,0);
     mtrcnt==0;
   }
-}                       //if 0 coninuously then off 
-else if(mtrdrv!=0)
+}                       //if >=200 stay on 
+else if(mtrdrv>=200)
 {
   digitalWrite(7,1);    // purpose:-to establish wired connection with laptop 
   mtrcnt==0;            // without opening car
 }
+if(steer<=1)
+steerspead=128;
+else if(steer<=2)
+steerspead=255;
+else if(steer>=5)
+steerspead=192;
+analogWrite(6,steerspead);
 delay(10);
 }
