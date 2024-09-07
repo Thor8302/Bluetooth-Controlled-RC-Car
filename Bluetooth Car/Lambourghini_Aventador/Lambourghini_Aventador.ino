@@ -1,8 +1,8 @@
-//steering replaced by servo angles arranged as (87;110;136)::(R;C;L) , bluetooth switching code is written but not in ; bluetooth powered by extra communication pins installed
-//ghini:-1/5/2021
+// ghini new for remote
+// 14/5/2021
 #include<Servo.h>
 char t;
-int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0,sgnlcnt=0,sgnl=0;
+int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0,sgnlcnt=0,sgnl=0,rangle=87,langle=136;
 int s=0,speed=0; 
 Servo steer;
 void setup() {
@@ -18,18 +18,49 @@ Serial.begin(9600);
 }
  
 void loop() {
-  t='a';
+  t='A';
 if(Serial.available()){
   t = Serial.read();
   s = int (t);
   Serial.println(t);
   Serial.println(s);
+  //Serial.println(langle);
+  //Serial.println(rangle);
 }
+ 
+ 
+ 
+ if((s>=97)&&(s<=116))                ///  from here
+{ //Serial.println(s);
+  if((s>=97)&&(s<=106))
+  langle=map(s,97,106,136,113);
+                                                     /// angle setting from remote
+  if((s>=107)&&(s<=116))
+  rangle=map(s,107,116,109,87);
+//Serial.println(langle);
+//Serial.print(rangle);
+}                                     //// to here
+
+
+if(t=='q')                 // from here ....    
+{
+  speed=255;
+                                 //this is speed setting column.
+}
+if((s>=48)&&(s<=57))
+{
+  s=s-48;
+  speed=(25.5*s);
+  
+}                               // to here ....
+
+ 
+ 
  
 if(t == 'F'){            //move forward
    
 
-  steer.write(110);
+  steer.write(111);
   digitalWrite(2,HIGH);
   digitalWrite(3,LOW);
   digitalWrite(8,HIGH);
@@ -48,7 +79,7 @@ if(t == 'F'){            //move forward
 else if(t == 'B'){      //move reverse 
   
  
-  steer.write(110);
+  steer.write(111);
   digitalWrite(3,HIGH);
   digitalWrite(2,LOW);
   digitalWrite(8,LOW);
@@ -67,7 +98,7 @@ else if(t == 'B'){      //move reverse
  
 else if(t == 'L'){         //left
   digitalWrite(11,m);
-  steer.write(136);
+  steer.write(langle);
   //digitalWrite(8,LOW);
   m=0;
 
@@ -77,7 +108,7 @@ else if(t == 'L'){         //left
  
 else if(t == 'R'){         //right    
   digitalWrite(11,m);
-  steer.write(87);
+  steer.write(rangle);
   //digitalWrite(8,LOW);
   m=0;
   
@@ -88,7 +119,7 @@ else if(t == 'R'){         //right
 else if(t == 'G'){    //forward left
   digitalWrite(2,HIGH);
   digitalWrite(3,LOW);
-  steer.write(136);
+  steer.write(langle);
   digitalWrite(8,HIGH);
   fcnt=0;
   sgnl=0;  
@@ -104,7 +135,7 @@ else if(t == 'G'){    //forward left
 else if(t == 'I'){  //forward right
   digitalWrite(3,LOW);
   digitalWrite(2,HIGH);
-  steer.write(87);
+  steer.write(rangle);
   digitalWrite(8,HIGH);
   fcnt=0;
   sgnl=0;
@@ -119,7 +150,7 @@ else if(t == 'I'){  //forward right
  else if(t=='H'){   //backward left
    digitalWrite(3,HIGH);
    digitalWrite(2,LOW);
-   steer.write(136);
+   steer.write(langle);
    digitalWrite(8,LOW);
    fcnt=100;
    sgnl=0;
@@ -132,7 +163,7 @@ else if(t == 'I'){  //forward right
   analogWrite(11,speed);
  }
  else if(t=='J'){   //backward right
-   steer.write(87);
+   steer.write(rangle);
    digitalWrite(3,HIGH);
    digitalWrite(2,LOW);
    digitalWrite(8,LOW);
@@ -146,10 +177,15 @@ else if(t == 'I'){  //forward right
   else
   analogWrite(11,speed);
  }
+
+ 
+ 
 else if(t == 'S'){      //STOP (all motors stop)
   digitalWrite(11,m);
   digitalWrite(8,flght);
-  steer.write(110);
+  steer.write(111);
+  langle=136;
+  rangle=87;
   n=0;
 
 }
@@ -178,7 +214,7 @@ else if(t=='x'){
 else if(t=='V'||t=='v'){  // emergency all off
   digitalWrite(2,LOW);
   digitalWrite(3,LOW);
-  steer.write(110);
+  steer.write(111);
   digitalWrite(8,LOW);
   n=0;
   m=0;
@@ -186,7 +222,7 @@ else if(t=='V'||t=='v'){  // emergency all off
 
   digitalWrite(11,0);
 }
-else if(t=='a'){   // no signal then off
+else if(t=='A'){   // no signal then off
   n=n+1;
   if(n>=20){
     n=0;
@@ -199,20 +235,11 @@ else if(t=='a'){   // no signal then off
     digitalWrite(11,0);
     digitalWrite(8,0);
     }
-    steer.write(110);
+    steer.write(111);
   }
 }
-else if(t=='q')                 // from here ....    
-{
-  speed=255;
-                                 //this is speed setting column.
-}
-if((s>=48)&&(s<=57))
-{
-  s=s-48;
-  speed=(25.5*s);
-  
-}                               // to here ....
+
+
 if(fcnt<=100)                   // from here ....
 {
   fcnt=fcnt+1;
@@ -261,6 +288,8 @@ if(sgnl==1){                 // from here
     sgnlcnt=0;
   }
 }                           // to here
+
+
 
 delay(10);           
 }
