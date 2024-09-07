@@ -1,6 +1,6 @@
-//                               ghini :- 3:26 24/12/2020 .. steering power manupulator I
+//                       ghini :- 4:15 24/12/2020 steer power manipulator II ( using inverse just after a steer signal to stop clotting into a particular direction.
 char t;
-int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0,steer=0;
+int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0,steer=0,steer4=0,steer5=0;
 int s=0,speed=0,steerspead=0; 
 void setup() {
 pinMode(2,OUTPUT);   //forward
@@ -26,7 +26,10 @@ if(Serial.available()){
 }
  
 if(t == 'F'){            //move forward(all motors rotate in forward direction)
-  
+   
+  digitalWrite(4,steer4);
+  digitalWrite(5,steer5);
+  delay(1);
   digitalWrite(4,LOW);
   digitalWrite(5,LOW);
   digitalWrite(2,HIGH);
@@ -36,6 +39,8 @@ if(t == 'F'){            //move forward(all motors rotate in forward direction)
   flght=1;
   m=0;
   n=0;
+  steer4=0;
+  steer5=0;
   steer=0;
   if(speed==255)
   digitalWrite(10,1);
@@ -44,6 +49,10 @@ if(t == 'F'){            //move forward(all motors rotate in forward direction)
 }
  
 else if(t == 'B'){      //move reverse (all motors rotate in reverse direction)
+  
+  digitalWrite(4,steer4);
+  digitalWrite(5,steer5);
+  delay(1);
   digitalWrite(4,LOW);
   digitalWrite(5,LOW);
   digitalWrite(3,HIGH);
@@ -51,6 +60,8 @@ else if(t == 'B'){      //move reverse (all motors rotate in reverse direction)
   digitalWrite(8,LOW);
   fcnt=100;
   steer=0;
+  steer4=0;
+  steer5=0;
   flght=0;
   m=0;
   n=0;
@@ -69,6 +80,8 @@ else if(t == 'L'){ //left
   m=0;
   steer=steer+1;
   n=0;
+  steer4=0;
+  steer5=1;
 }
  
 else if(t == 'R'){  //right    
@@ -80,6 +93,8 @@ else if(t == 'R'){  //right
   m=0;
   steer=steer+1;
   n=0;
+  steer4=1;
+  steer5=0;
 }
 
 else if(t == 'G'){    //forward left
@@ -93,6 +108,8 @@ else if(t == 'G'){    //forward left
   flght=1;
   m=0;
   n=0;
+  steer4=0;
+  steer5=1;
   if(speed==255)
   digitalWrite(10,1);
   else
@@ -106,6 +123,8 @@ else if(t == 'I'){  //forward right
   digitalWrite(8,HIGH);
   fcnt=0;
   steer=steer+1;
+  steer4=1;
+  steer5=0;
   flght=1;
   m=0;
   n=0;
@@ -121,6 +140,8 @@ else if(t == 'I'){  //forward right
    digitalWrite(5,LOW);
    digitalWrite(8,LOW);
    fcnt=100;
+   steer4=0;
+   steer5=1;
    steer=steer+1;
    flght=0;
    m=0;
@@ -137,6 +158,8 @@ else if(t == 'I'){  //forward right
    digitalWrite(2,LOW);
    digitalWrite(8,LOW);
    fcnt=100;
+   steer4=1;
+   steer5=0;
    steer=steer+1;
    flght=0;
    m=0;
@@ -150,9 +173,14 @@ else if(t == 'S'){      //STOP (all motors stop)
   digitalWrite(2,m);
   digitalWrite(3,m);
   digitalWrite(8,flght);
+  digitalWrite(4,steer4);
+  digitalWrite(5,steer5);
+  delay(1);
   digitalWrite(4,LOW);
   digitalWrite(5,LOW);
   n=0;
+  steer4=0;
+  steer5=0;
   steer=0;
 }
 else if(t=='W'){   //lights on
@@ -177,6 +205,8 @@ else if(t=='V'||t=='v'){  // emergency all off
   digitalWrite(8,LOW);
   n=0;
   m=0;
+  steer4=0;
+  steer5=0;
   steer=0;
   digitalWrite(10,0);
 }
@@ -186,12 +216,15 @@ else if(t=='a'){   // no signal then off
     n=0;
     m=0;
     steer=0;
+    steer4=0;
+    steer5=0;
     digitalWrite(2,LOW);
     digitalWrite(3,LOW);
     digitalWrite(4,LOW);
     digitalWrite(5,LOW);
     digitalWrite(8,LOW);
     analogWrite(10,0);
+    
   }
 }
 else if(t=='q')
