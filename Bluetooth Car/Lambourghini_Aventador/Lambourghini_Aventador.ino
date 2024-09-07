@@ -1,19 +1,18 @@
-//signal lights added.
-//ghini:- 5/2/2021
+//steering replaced by servo angles arranged as (87;110;136)::(R;C;L) , bluetooth switching code is written but not in ; bluetooth powered by extra communication pins installed
+//ghini:-1/5/2021
+#include<Servo.h>
 char t;
 int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0,sgnlcnt=0,sgnl=0;
 int s=0,speed=0; 
+Servo steer;
 void setup() {
+steer.attach(4);  
 pinMode(2,OUTPUT);   //forward
 pinMode(3,OUTPUT);   // reverse
-pinMode(4,OUTPUT);   //right motors forward
-pinMode(5,OUTPUT);   //right motors reverse
-pinMode(10,OUTPUT);  //accelerator
-pinMode(6,OUTPUT);   //steering power manupulator
+pinMode(11,OUTPUT);  //accelerator
 pinMode(A1,INPUT);    //from motordrive to switch on bluetooth
 pinMode(7,OUTPUT);   //bluetooth on/off
 pinMode(8,OUTPUT);   //front light on/off
-digitalWrite(6,1);   //steering power on
 Serial.begin(9600);
  
 }
@@ -27,11 +26,10 @@ if(Serial.available()){
   Serial.println(s);
 }
  
-if(t == 'F'){            //move forward(all motors rotate in forward direction)
+if(t == 'F'){            //move forward
    
 
-  digitalWrite(4,LOW);
-  digitalWrite(5,LOW);
+  steer.write(110);
   digitalWrite(2,HIGH);
   digitalWrite(3,LOW);
   digitalWrite(8,HIGH);
@@ -42,16 +40,15 @@ if(t == 'F'){            //move forward(all motors rotate in forward direction)
   sgnl=0;
   
   if(speed==255)
-  digitalWrite(10,1);
+  digitalWrite(11,1);
   else
-  analogWrite(10,speed);
+  analogWrite(11,speed);
 }
  
-else if(t == 'B'){      //move reverse (all motors rotate in reverse direction)
+else if(t == 'B'){      //move reverse 
   
  
-  digitalWrite(4,LOW);
-  digitalWrite(5,LOW);
+  steer.write(110);
   digitalWrite(3,HIGH);
   digitalWrite(2,LOW);
   digitalWrite(8,LOW);
@@ -63,15 +60,14 @@ else if(t == 'B'){      //move reverse (all motors rotate in reverse direction)
   m=0;
   n=0;
   if(speed==255)
-  digitalWrite(10,1);
+  digitalWrite(11,1);
   else
-  analogWrite(10,speed);
+  analogWrite(11,speed);
 }
  
-else if(t == 'L'){ //left
-  digitalWrite(10,m);
-  digitalWrite(4,HIGH);
-  digitalWrite(5,LOW);
+else if(t == 'L'){         //left
+  digitalWrite(11,m);
+  steer.write(136);
   //digitalWrite(8,LOW);
   m=0;
 
@@ -79,10 +75,9 @@ else if(t == 'L'){ //left
   
 }
  
-else if(t == 'R'){  //right    
-  digitalWrite(10,m);
-  digitalWrite(5,HIGH);
-  digitalWrite(4,LOW);
+else if(t == 'R'){         //right    
+  digitalWrite(11,m);
+  steer.write(87);
   //digitalWrite(8,LOW);
   m=0;
   
@@ -92,9 +87,8 @@ else if(t == 'R'){  //right
 
 else if(t == 'G'){    //forward left
   digitalWrite(2,HIGH);
-  digitalWrite(4,HIGH);
   digitalWrite(3,LOW);
-  digitalWrite(5,LOW);
+  steer.write(136);
   digitalWrite(8,HIGH);
   fcnt=0;
   sgnl=0;  
@@ -103,15 +97,14 @@ else if(t == 'G'){    //forward left
   n=0;
 
   if(speed==255)
-  digitalWrite(10,1);
+  digitalWrite(11,1);
   else
-  analogWrite(10,speed);
+  analogWrite(11,speed);
 }
 else if(t == 'I'){  //forward right
   digitalWrite(3,LOW);
   digitalWrite(2,HIGH);
-  digitalWrite(5,HIGH);
-  digitalWrite(4,LOW);
+  steer.write(87);
   digitalWrite(8,HIGH);
   fcnt=0;
   sgnl=0;
@@ -119,15 +112,14 @@ else if(t == 'I'){  //forward right
   m=0;
   n=0;
   if(speed==255)
-  digitalWrite(10,1);
+  digitalWrite(11,1);
   else
-  analogWrite(10,speed);
+  analogWrite(11,speed);
 }
  else if(t=='H'){   //backward left
    digitalWrite(3,HIGH);
    digitalWrite(2,LOW);
-   digitalWrite(4,HIGH);
-   digitalWrite(5,LOW);
+   steer.write(136);
    digitalWrite(8,LOW);
    fcnt=100;
    sgnl=0;
@@ -135,13 +127,12 @@ else if(t == 'I'){  //forward right
    m=0;
    n=0;
    if(speed==255)
-  digitalWrite(10,1);
+  digitalWrite(11,1);
   else
-  analogWrite(10,speed);
+  analogWrite(11,speed);
  }
  else if(t=='J'){   //backward right
-   digitalWrite(5,HIGH);
-   digitalWrite(4,LOW);
+   steer.write(87);
    digitalWrite(3,HIGH);
    digitalWrite(2,LOW);
    digitalWrite(8,LOW);
@@ -151,15 +142,14 @@ else if(t == 'I'){  //forward right
    m=0;
    n=0;
    if(speed==255)
-  digitalWrite(10,1);
+  digitalWrite(11,1);
   else
-  analogWrite(10,speed);
+  analogWrite(11,speed);
  }
 else if(t == 'S'){      //STOP (all motors stop)
-  digitalWrite(10,m);
+  digitalWrite(11,m);
   digitalWrite(8,flght);
-  digitalWrite(4,LOW);
-  digitalWrite(5,LOW);
+  steer.write(110);
   n=0;
 
 }
@@ -188,14 +178,13 @@ else if(t=='x'){
 else if(t=='V'||t=='v'){  // emergency all off
   digitalWrite(2,LOW);
   digitalWrite(3,LOW);
-  digitalWrite(4,LOW);
-  digitalWrite(5,LOW);
+  steer.write(110);
   digitalWrite(8,LOW);
   n=0;
   m=0;
   sgnl=0;
 
-  digitalWrite(10,0);
+  digitalWrite(11,0);
 }
 else if(t=='a'){   // no signal then off
   n=n+1;
@@ -207,12 +196,10 @@ else if(t=='a'){   // no signal then off
     {
     digitalWrite(2,LOW);
     digitalWrite(3,LOW);
-    digitalWrite(10,0);
+    digitalWrite(11,0);
     digitalWrite(8,0);
     }
-    digitalWrite(4,LOW);
-    digitalWrite(5,LOW);
-    
+    steer.write(110);
   }
 }
 else if(t=='q')                 // from here ....    
@@ -242,25 +229,25 @@ mtrdrv=analogRead(A1);  //reading input at A1 coming from motordrive's 5volt   f
 if(mtrdrv<=100)           //if <=200 switch off bluetooth on count of 100
 {
   mtrcnt=mtrcnt+1;
-  if(mtrcnt>=10)
+  if(mtrcnt>=1000)
   {
-    digitalWrite(7,0);
+    digitalWrite(7,1);
     mtrcnt==0;
   }
 }                       //if >=200 stay on                                process for switching bluetooth on/off
 else if(mtrdrv>=200)
 {
-  digitalWrite(7,1);    // purpose:-to establish wired connection with laptop 
+  digitalWrite(7,0);    // purpose:-to establish wired connection with laptop 
   mtrcnt==0;            // without opening car                                   to here .....
 }
-if(sgnl==1){
+if(sgnl==1){                 // from here 
   sgnlcnt=sgnlcnt+1;
   if((sgnlcnt>=50)&&(sgnlcnt<1000)){
   digitalWrite(8,0);
   digitalWrite(2,0);
   digitalWrite(3,0);
-  digitalWrite(10,0);
-  m=0;
+  digitalWrite(11,0);
+  m=0;                      // parking light blinking function
   flght=0;
   sgnlcnt=1000;
   }
@@ -268,12 +255,12 @@ if(sgnl==1){
     digitalWrite(8,1);
     digitalWrite(2,1);
     digitalWrite(3,1);
-    digitalWrite(10,1);
+    digitalWrite(11,1);
     flght=1;
     m=1;
     sgnlcnt=0;
   }
-}
+}                           // to here
 
-delay(10);
+delay(10);           
 }
