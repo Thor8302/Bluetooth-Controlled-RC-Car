@@ -1,6 +1,6 @@
-//there were some errors visible in ghini ( lost connection frequently)
-//so took base of last used code as it has some other updates also in comment section and removed all new functions related steering.
-//👇 ghini : 28/12/2020 12:59 a.m
+//Finally we got  to know that after updating android of phone , bluetooth app was unable to function properly because of which connection lost continuously
+//No it was wrong  , problem was caused bcoz of current fluctuations
+//ghini :-13/1/2021 motor eased by eliminating inductance brake .
 char t;
 int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0;
 int s=0,speed=0; 
@@ -69,8 +69,7 @@ else if(t == 'B'){      //move reverse (all motors rotate in reverse direction)
 }
  
 else if(t == 'L'){ //left
-  digitalWrite(2,m);
-  digitalWrite(3,m);
+  digitalWrite(10,m);
   digitalWrite(4,HIGH);
   digitalWrite(5,LOW);
   //digitalWrite(8,LOW);
@@ -81,8 +80,7 @@ else if(t == 'L'){ //left
 }
  
 else if(t == 'R'){  //right    
-  digitalWrite(2,m);
-  digitalWrite(3,m);
+  digitalWrite(10,m);
   digitalWrite(5,HIGH);
   digitalWrite(4,LOW);
   //digitalWrite(8,LOW);
@@ -158,8 +156,7 @@ else if(t == 'I'){  //forward right
   analogWrite(10,speed);
  }
 else if(t == 'S'){      //STOP (all motors stop)
-  digitalWrite(2,m);
-  digitalWrite(3,m);
+  digitalWrite(10,m);
   digitalWrite(8,flght);
   digitalWrite(4,LOW);
   digitalWrite(5,LOW);
@@ -167,18 +164,20 @@ else if(t == 'S'){      //STOP (all motors stop)
 
 }
 else if(t=='W'){   //lights on
+  digitalWrite(2,1);
+  digitalWrite(3,1);
   flght=1;
   m=1;
  
   n=0;
-  analogWrite(10,255);
 }
 else if(t=='w'){   // lights off
+  digitalWrite(2,0);
+  digitalWrite(3,0);
   flght=0;
 
   m=0;
   n=0;
-  analogWrite(10,0);
 }
 else if(t=='V'||t=='v'){  // emergency all off
   digitalWrite(2,LOW);
