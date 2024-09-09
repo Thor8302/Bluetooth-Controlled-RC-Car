@@ -1,26 +1,52 @@
 /*
-               GHINI REMOTE PROTOCOL 7/6/2021
-               ghini remote updated after steering lever fixed properly
+               GHINI REMOTE PROTOCOL 10/6/2021
+               remote code updated to make smart disconnect but didn't worked as much
 */
 
-int mtrspeed, steer, light, park, strangleint, parkkey, lightkey;
+int mtrspeed, steer, light, park, strangleint, parkkey, lightkey,blu=0;
 char mtrvalue, strvalue, strangle, parkvalue = 'x', lightvalue = 'w',mtrspeedchar;
 void setup() {
   pinMode(A6, INPUT);
   pinMode(A7, INPUT);
   pinMode(A2, INPUT);
-  pinMode(A4, INPUT);
+  pinMode(A3, INPUT);
+  pinMode(A3,OUTPUT);
+  pinMode(13,OUTPUT);
+ digitalWrite(A3,1); 
   Serial.begin(9600);
 }
 
 void loop() {
-  mtrspeed = analogRead(A6);
+char a;
+a='~';
+if(Serial.available())
+a=Serial.read();
+if(a!='~')
+{
+  blu=1;
+}
+else
+{
+  if(blu==1)
+  {
+    blu=0;
+    digitalWrite(A3,0);
+    delay(10);
+    digitalWrite(A3,1);
+  }
+}
+
+ mtrspeed = analogRead(A6);
   steer = analogRead(A7);
   light = analogRead(A4);
   park = analogRead(A2);
-  if (mtrspeed >= 630) {         //  check for forward
+/*  Serial.print("mtr :");
+  Serial.println(mtrspeed);
+  Serial.print("steer");
+  Serial.println(steer);
+  */if (mtrspeed >= 690) {         //  check for forward
     mtrvalue = 'F';                       // and speed accordingly
-    mtrspeed = map(mtrspeed, 630, 1015, 32, 64);
+    mtrspeed = map(mtrspeed, 690, 1015, 32, 64);
   }
   else if (mtrspeed <= 430) {    //check for backward
     mtrvalue = 'B';                         // and speed accordingly
