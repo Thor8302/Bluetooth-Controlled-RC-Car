@@ -1,11 +1,12 @@
 /*
-       Lamourghini Aventador 1/2/2022
-       GHINI : UPDATE STILL REQUIRED FOR BATTERY VALUE FOR LOW CONDITION.
+       Lamourghini Aventador 17/2/2022
+       ghini update : angles changed again bcoz of errors
 */
 #include<Servo.h>
 char t;
 int m = 1, n = 0, mtrdrv = 0, mtrcnt = 0, fcnt = 0, flght = 0, sgnlcnt = 0, sgnl = 0, angle = 245  , remotelock = 0;
 int s = 0, speed = 0, blu = 0, center = 1663,battery=0,batterylow=0,batterycount=8,battimecount=0;
+int right=1348,left=1883,rangle=center-right,langle=left-center;
 Servo steer;
 void setup() {
   steer.attach(6);
@@ -19,6 +20,7 @@ void setup() {
   digitalWrite(9, 0);
   digitalWrite(10, 0);
   Serial.begin(9600);
+  steer.writeMicroseconds(center);
 
 }
 
@@ -46,7 +48,8 @@ void loop() {
   if (remotelock == 1) {                                   ///  from here
     if ((s >= 89) && (s <= 113))
     {
-      angle = map(s, 89, 113, 1, 245  );       // angle setting column
+      langle = map(s, 89, 113, 1, left-center  );
+      rangle = map(s, 89, 113, 1, center-right  );       // angle setting column
     }
 
   }                                              //// to here
@@ -132,7 +135,7 @@ void loop() {
       digitalWrite(11, 0);
     if (m == 0)
       digitalWrite(11, 1);
-    steer.writeMicroseconds( center + angle);
+    steer.writeMicroseconds( center + langle);
     //digitalWrite(8,LOW);
     m = 1;
     n = 0;
@@ -144,7 +147,7 @@ void loop() {
       digitalWrite(11, 0);
     if (m == 0)
       digitalWrite(11, 1);
-    steer.writeMicroseconds(  center - angle);
+    steer.writeMicroseconds(  center - rangle);
     //digitalWrite(8,LOW);
     m = 1;
     n = 0;
@@ -164,7 +167,7 @@ void loop() {
     }
     digitalWrite(5, HIGH);
     digitalWrite(3, LOW);
-    steer.writeMicroseconds(  center + angle);
+    steer.writeMicroseconds(  center + langle);
     digitalWrite(8, 0);
     digitalWrite(7, 0);
     fcnt = 0;
@@ -187,7 +190,7 @@ void loop() {
     }
     digitalWrite(3, LOW);
     digitalWrite(5, HIGH);
-    steer.writeMicroseconds(  center - angle);
+    steer.writeMicroseconds(  center - rangle);
     digitalWrite(8, 0);
     digitalWrite(7, 0);
     fcnt = 0;
@@ -209,7 +212,7 @@ void loop() {
 
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
-    steer.writeMicroseconds(  center + angle);
+    steer.writeMicroseconds(  center + langle);
     //  digitalWrite(8, LOW);
     // fcnt = 100;
     sgnl = 0;
@@ -228,7 +231,7 @@ void loop() {
       analogWrite(11, speed);
     }
 
-    steer.writeMicroseconds(  center - angle);
+    steer.writeMicroseconds(  center - rangle);
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
     //  digitalWrite(8, LOW);
