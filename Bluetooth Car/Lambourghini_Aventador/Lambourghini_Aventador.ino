@@ -1,7 +1,8 @@
 /*
-       Lamourghini Aventador 10/6/2021
-       ghini : minor updates (parking lights bugs removed,speed value made zero on left ,right ,stop , specific
-*/#include<Servo.h>
+      Lamourghini Aventador 28/6/2021
+      GHINI : updated bluetooth on/off
+*/
+#include<Servo.h>
 char t;
 int m = 1, n = 0, mtrdrv = 0, mtrcnt = 0, fcnt = 0, flght = 0, sgnlcnt = 0, sgnl = 0, angle = 24, remotelock = 0, once = 0;
 int s = 0, speed = 0, blu = 0;
@@ -11,10 +12,10 @@ void setup() {
   pinMode(5, OUTPUT);  //forward
   pinMode(3, OUTPUT);  // reverse
   pinMode(11, OUTPUT); //accelerator
-  pinMode(15, OUTPUT);   //bluetooth
+  pinMode(12, OUTPUT);   //bluetooth
   pinMode(8, OUTPUT);  //front light on/off
   pinMode(7, OUTPUT);  //front light on/off BOTH FOR BETTER GRND
-  digitalWrite(15, 1);
+  digitalWrite(12, 0);
   Serial.begin(9600);
 
 }
@@ -290,13 +291,6 @@ void loop() {
     digitalWrite(11, 0);
   }
   else if (t == 'A') { // no signal then off
-    if (blu == 1)
-    {
-      blu = 0;
-      digitalWrite(15, 0);
-      delay(10);
-      digitalWrite(15, 1);
-    }
     n = n + 1;
     if ((n >= 20) && (n <= 22)) {
       //n = 0;
@@ -304,6 +298,14 @@ void loop() {
 
       if (sgnl == 0)
       {
+         if (blu == 1)
+    {
+      blu = 0;
+      digitalWrite(12, 1);
+      delay(10);
+      digitalWrite(12, 0);
+    }
+   
         digitalWrite(5, LOW);
         digitalWrite(3, LOW);
         digitalWrite(11, 1);
