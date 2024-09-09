@@ -1,8 +1,7 @@
 /*
-               GHINI REMOTE PROTOCOL 
-               ghini remote ka delay fix nhi horha
-               ye last delay hai
-               16/5/2021
+               GHINI REMOTE PROTOCOL
+               remote code delay time reduced to 69
+               18/5/2021
 */
 
 int mtrspeed,steer,light,park,strangleint,parkkey,lightkey;
@@ -120,5 +119,5 @@ if(light<60){
   lightkey=0;
 }
 }
-  delay(110);
+  delay(69);
 }
