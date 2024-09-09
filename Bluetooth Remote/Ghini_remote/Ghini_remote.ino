@@ -1,6 +1,6 @@
 /*
-               GHINI REMOTE PROTOCOL 10/6/2021
-               remote code updated to make smart disconnect but didn't worked as much
+               GHINI REMOTE PROTOCOL 12/6/2021
+               ghini remote : - ) front value changed from 690 to 680
 */
 
 int mtrspeed, steer, light, park, strangleint, parkkey, lightkey,blu=0;
@@ -44,9 +44,9 @@ else
   Serial.println(mtrspeed);
   Serial.print("steer");
   Serial.println(steer);
-  */if (mtrspeed >= 690) {         //  check for forward
+  */if (mtrspeed >= 680) {         //  check for forward
     mtrvalue = 'F';                       // and speed accordingly
-    mtrspeed = map(mtrspeed, 690, 1015, 32, 64);
+    mtrspeed = map(mtrspeed, 680, 1015, 32, 64);
   }
   else if (mtrspeed <= 430) {    //check for backward
     mtrvalue = 'B';                         // and speed accordingly
