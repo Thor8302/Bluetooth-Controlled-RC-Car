@@ -1,6 +1,7 @@
 /*
-        Lamourghini Aventador 22/7/2021
-        ghini update : trial of steer.writeMicroseconds(); angle changed and written above , if this doesn't work need to fix the axle !!
+       Lamourghini Aventador 22/7/2021
+       GHINI UPDATE : SERVO ON 6 , BLUE = 9,10 ; ACC =11 
+       REMEMBER WHEN USING SERVO LIBRARY PIN 9,10 CANNOT GIVE PWM SIGNALS.
 */
 #include<Servo.h>
 char t;
@@ -8,14 +9,16 @@ int m = 1, n = 0, mtrdrv = 0, mtrcnt = 0, fcnt = 0, flght = 0, sgnlcnt = 0, sgnl
 int s = 0, speed = 0, blu = 0, center = 1653;
 Servo steer;
 void setup() {
-  steer.attach(4);
+  steer.attach(6);
   pinMode(5, OUTPUT);  //forward
   pinMode(3, OUTPUT);  // reverse
   pinMode(11, OUTPUT); //accelerator
-  pinMode(12, OUTPUT);   //bluetooth
+  pinMode(9, OUTPUT);   //bluetooth
+  pinMode(10, OUTPUT);   //bluetooth
   pinMode(8, OUTPUT);  //front light on/off
   pinMode(7, OUTPUT);  //front light on/off BOTH FOR BETTER GRND
-  digitalWrite(12, 0);
+  digitalWrite(9, 0);
+  digitalWrite(10, 0);
   Serial.begin(9600);
 
 }
@@ -299,9 +302,13 @@ void loop() {
       if (blu == 1)
       {
         blu = 0;
-        digitalWrite(12, 1);
+        digitalWrite(9, 1);
+        digitalWrite(10, 1);
+        
         delay(10);
-        digitalWrite(12, 0);
+        digitalWrite(9, 0);
+        digitalWrite(10, 0);
+        
       }
 
 
