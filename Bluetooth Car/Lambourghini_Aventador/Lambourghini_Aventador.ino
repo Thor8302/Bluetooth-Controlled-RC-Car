@@ -1,7 +1,6 @@
 /*
-         Lamourghini Aventador 30/5/2021
-         ghini update : tried to increase light power
-         blinking lights fn changed
+        Lamourghini Aventador 30/5/2021
+        ghini code updated :- speed introduced before polarity for motor. but is still in trial.
 */
 #include<Servo.h>
 char t;
@@ -74,6 +73,11 @@ void loop() {
 
   if (t == 'F') {          //move forward
 
+    if (speed == 255)
+      digitalWrite(5, 1);
+
+    else
+      analogWrite(5, speed);
 
     steer.write(111);
     digitalWrite(11, HIGH);
@@ -86,14 +90,15 @@ void loop() {
     n = 0;
     sgnl = 0;
 
-    if (speed == 255)
-      digitalWrite(5, 1);
-    else
-      analogWrite(5, speed);
+
   }
 
   else if (t == 'B') {    //move reverse
 
+    if (speed == 255)
+      digitalWrite(3, 1);
+    else
+      analogWrite(3, speed);
 
     steer.write(111);
     digitalWrite(11, HIGH);
@@ -106,10 +111,6 @@ void loop() {
     // flght = 0;
     m = 1;
     n = 0;
-    if (speed == 255)
-      digitalWrite(3, 1);
-    else
-      analogWrite(3, speed);
   }
 
   else if (t == 'L') {       //left
@@ -139,6 +140,12 @@ void loop() {
   }
 
   else if (t == 'G') {  //forward left
+
+    if (speed == 255)
+      digitalWrite(5, 1);
+    else
+      analogWrite(5, speed);
+
     digitalWrite(11, HIGH);
     digitalWrite(3, LOW);
     steer.write(111 + angle);
@@ -150,12 +157,14 @@ void loop() {
     m = 1;
     n = 0;
 
+  }
+  else if (t == 'I') { //forward right
+
     if (speed == 255)
       digitalWrite(5, 1);
     else
       analogWrite(5, speed);
-  }
-  else if (t == 'I') { //forward right
+
     digitalWrite(3, LOW);
     digitalWrite(11, HIGH);
     steer.write(111 - angle);
@@ -166,12 +175,14 @@ void loop() {
     flght = 0;
     m = 1;
     n = 0;
-    if (speed == 255)
-      digitalWrite(5, 1);
-    else
-      analogWrite(5, speed);
   }
   else if (t == 'H') { //backward left
+
+    if (speed == 555)
+      digitalWrite(3, 1);
+    else
+      analogWrite(3, speed);
+
     digitalWrite(11, HIGH);
     digitalWrite(5, LOW);
     steer.write(111 + angle);
@@ -181,12 +192,14 @@ void loop() {
     //  flght = 0;
     m = 1;
     n = 0;
-    if (speed == 555)
+  }
+  else if (t == 'J') { //backward right
+
+    if (speed == 255)
       digitalWrite(3, 1);
     else
       analogWrite(3, speed);
-  }
-  else if (t == 'J') { //backward right
+
     steer.write(111 - angle);
     digitalWrite(11, HIGH);
     digitalWrite(5, LOW);
@@ -196,10 +209,6 @@ void loop() {
     // flght = 0;
     m = 1;
     n = 0;
-    if (speed == 255)
-      digitalWrite(3, 1);
-    else
-      analogWrite(3, speed);
   }
 
 
