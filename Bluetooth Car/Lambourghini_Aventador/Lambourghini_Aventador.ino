@@ -1,12 +1,11 @@
 /*
-        Lamourghini Aventador 20/7/2021
-        ghini update : new servo fixed so angle values changed
-        249 is reduced to 246 due to strain possibility
+        Lamourghini Aventador 22/7/2021
+        ghini update : trial of steer.writeMicroseconds(); angle changed and written above , if this doesn't work need to fix the axle !!
 */
 #include<Servo.h>
 char t;
-int m = 1, n = 0, mtrdrv = 0, mtrcnt = 0, fcnt = 0, flght = 0, sgnlcnt = 0, sgnl = 0, angle = 24, remotelock = 0;
-int s = 0, speed = 0, blu = 0, center = 108;
+int m = 1, n = 0, mtrdrv = 0, mtrcnt = 0, fcnt = 0, flght = 0, sgnlcnt = 0, sgnl = 0, angle = 245  , remotelock = 0;
+int s = 0, speed = 0, blu = 0, center = 1653;
 Servo steer;
 void setup() {
   steer.attach(4);
@@ -45,7 +44,7 @@ void loop() {
   if (remotelock == 1) {                                   ///  from here
     if ((s >= 89) && (s <= 113))
     {
-      angle = map(s, 89, 113, 1, 25);       // angle setting column
+      angle = map(s, 89, 113, 1, 245  );       // angle setting column
     }
 
   }                                              //// to here
@@ -87,7 +86,7 @@ void loop() {
       analogWrite(11, speed);
     }
 
-    steer.write(center);
+    steer.writeMicroseconds(center);
     digitalWrite(5, HIGH);
     digitalWrite(3, LOW);
     digitalWrite(8, 0);
@@ -113,7 +112,7 @@ void loop() {
       analogWrite(11, speed);
     }
 
-    steer.write(center);
+    steer.writeMicroseconds(center);
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
     //  digitalWrite(8, LOW);
@@ -131,7 +130,7 @@ void loop() {
       digitalWrite(11, 0);
     if (m == 0)
       digitalWrite(11, 1);
-    steer.write(center + angle);
+    steer.writeMicroseconds( center + angle);
     //digitalWrite(8,LOW);
     m = 1;
     n = 0;
@@ -143,7 +142,7 @@ void loop() {
       digitalWrite(11, 0);
     if (m == 0)
       digitalWrite(11, 1);
-    steer.write(center - angle);
+    steer.writeMicroseconds(  center - angle);
     //digitalWrite(8,LOW);
     m = 1;
     n = 0;
@@ -163,7 +162,7 @@ void loop() {
     }
     digitalWrite(5, HIGH);
     digitalWrite(3, LOW);
-    steer.write(center + angle);
+    steer.writeMicroseconds(  center + angle);
     digitalWrite(8, 0);
     digitalWrite(7, 0);
     fcnt = 0;
@@ -186,7 +185,7 @@ void loop() {
     }
     digitalWrite(3, LOW);
     digitalWrite(5, HIGH);
-    steer.write(center - angle);
+    steer.writeMicroseconds(  center - angle);
     digitalWrite(8, 0);
     digitalWrite(7, 0);
     fcnt = 0;
@@ -208,7 +207,7 @@ void loop() {
 
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
-    steer.write(center + angle);
+    steer.writeMicroseconds(  center + angle);
     //  digitalWrite(8, LOW);
     // fcnt = 100;
     sgnl = 0;
@@ -227,7 +226,7 @@ void loop() {
       analogWrite(11, speed);
     }
 
-    steer.write(center - angle);
+    steer.writeMicroseconds(  center - angle);
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
     //  digitalWrite(8, LOW);
@@ -247,7 +246,7 @@ void loop() {
       digitalWrite(11, 0);
     digitalWrite(8, flght);
     digitalWrite(7, flght);
-    steer.write(center);
+    steer.writeMicroseconds(  center);
     // angle = 25;
 
     n = 0;
@@ -282,7 +281,7 @@ void loop() {
   else if (t == 'V' || t == 'v') { // emergency all off
     digitalWrite(5, LOW);
     digitalWrite(3, LOW);
-    steer.write(center);
+    steer.writeMicroseconds(  center);
     digitalWrite(8, 1);
     digitalWrite(7, 1);
     n = 0;
@@ -318,7 +317,7 @@ void loop() {
         digitalWrite(7, 1);
         angle = 25;
       }
-      steer.write(center);
+      steer.writeMicroseconds(  center);
 
     }
   }
