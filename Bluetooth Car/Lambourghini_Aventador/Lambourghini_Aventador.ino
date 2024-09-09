@@ -1,6 +1,6 @@
 /*
-        Lamourghini Aventador 4/6/2021
-        ghini :- one of the previous update for less power drainage made an error of board switching off on sudden polarity change ,now regained . (motorspeed pin back to normal use) 
+        Lamourghini Aventador 8/6/2021
+        GHINI : LEFT ANGLE INCREASED BY 1
 */
 #include<Servo.h>
 char t;
@@ -127,7 +127,7 @@ void loop() {
       digitalWrite(11, 0);
     if (m == 0)
       digitalWrite(11, 1);
-    steer.write(111 + angle);
+    steer.write(112 + angle);
     //digitalWrite(8,LOW);
     m = 1;
     n = 0;
@@ -159,7 +159,7 @@ void loop() {
 }
     digitalWrite(5, HIGH);
     digitalWrite(3, LOW);
-    steer.write(111 + angle);
+    steer.write(112 + angle);
     digitalWrite(8, 0);
     digitalWrite(7, 0);
     fcnt = 0;
@@ -204,7 +204,7 @@ void loop() {
   
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
-    steer.write(111 + angle);
+    steer.write(112 + angle);
     //  digitalWrite(8, LOW);
     // fcnt = 100;
     sgnl = 0;
