@@ -1,6 +1,8 @@
 /*
-               GHINI REMOTE PROTOCOL
-               14/5/2021
+               GHINI REMOTE PROTOCOL 
+               ghini remote ka delay fix nhi horha
+               ye last delay hai
+               16/5/2021
 */
 
 int mtrspeed,steer,light,park,strangleint,parkkey,lightkey;
@@ -20,7 +22,7 @@ void loop() {
     park=analogRead(A2);
     if(mtrspeed>700){             //  check for forward 
       mtrvalue='F';                         // and speed accordingly
-      mtrspeed=map(mtrspeed,700,1021,0,10);
+      mtrspeed=map(mtrspeed,700,1015,0,10);
     }
     else if(mtrspeed<400){        //check for backward
       mtrvalue='B';                           // and speed accordingly
@@ -37,11 +39,11 @@ void loop() {
 
 if(steer>700){                      //check for right
   strvalue='R';
-  strangleint=map(steer,702,1022,107,116);//and angle int value
+  strangleint=map(steer,600,990,107,116);//and angle int value
 }
 else if(steer<300){                  // check for left
   strvalue='L';
-  strangleint=map(steer,0,298,97,106); // and angle int value
+  strangleint=map(steer,0,400,97,106); // and angle int value
 }
 else{
   strvalue='S';
@@ -118,5 +120,5 @@ if(light<60){
   lightkey=0;
 }
 }
-  delay(100);
+  delay(110);
 }
