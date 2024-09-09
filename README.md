@@ -19,6 +19,14 @@ https://github.com/user-attachments/assets/5f923caa-bc60-437f-bab1-1fcdc5290b22
 
 
 
+https://github.com/user-attachments/assets/a3b08fd6-f733-40f8-8a5f-268bb5673190
+
+
+
+https://github.com/user-attachments/assets/d83b4281-7d09-4929-ad26-6a417a6e8912
+
+
+
 ## Features
 
 - **Bluetooth Control**: The car is controlled via a Bluetooth-enabled device.
