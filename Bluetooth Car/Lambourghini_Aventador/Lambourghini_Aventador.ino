@@ -1,7 +1,8 @@
-//steeringvalue me 'q' bhi jata tha jo nahi jana chahiye u know y to uske wajah se remote aur car dono ka code change hua hai\
-//to car ab new values pe maping karta hai   for right 111->87 and for left 113->136
-//20/5/2021
-
+/*
+           Lambourghini Aventador
+           induction brakes applied when connection suddenly lost while driving
+           22/5/2021
+*/
 #include<Servo.h>
 char t;
 int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0,sgnlcnt=0,sgnl=0,rangle=87,langle=136;
@@ -234,7 +235,7 @@ else if(t=='A'){   // no signal then off
     {
     digitalWrite(2,LOW);
     digitalWrite(3,LOW);
-    digitalWrite(11,0);
+    digitalWrite(11,1);
     digitalWrite(8,0);
     }
     steer.write(112);
