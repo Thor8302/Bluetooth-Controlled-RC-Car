@@ -1,12 +1,11 @@
 /*
-       Lamourghini Aventador 30/7/2021
-       GHINI UPDATE : SERVO ON 6 , BLUE = 9,10 ; ACC =11 
-       REMEMBER WHEN USING SERVO LIBRARY PIN 9,10 CANNOT GIVE PWM SIGNALS.
+       Lamourghini Aventador 1/2/2022
+       GHINI : UPDATED BATTERY CHECK INTRODUCED FRONT CONSTANTLY BLINKING WHEN BATTERY LOW
 */
 #include<Servo.h>
 char t;
 int m = 1, n = 0, mtrdrv = 0, mtrcnt = 0, fcnt = 0, flght = 0, sgnlcnt = 0, sgnl = 0, angle = 245  , remotelock = 0;
-int s = 0, speed = 0, blu = 0, center = 1653;
+int s = 0, speed = 0, blu = 0, center = 1663,battery=0,batterylow=0,batterycount=8,battimecount=0;
 Servo steer;
 void setup() {
   steer.attach(6);
@@ -243,6 +242,28 @@ void loop() {
 
 
   else if (t == 'S') {    //STOP (all motors stop)
+  
+    battery=readVcc();
+   //Serial.println(battery);
+    if(battery<4780)
+    {
+      batterycount+=1;
+    }
+    else
+    {
+      batterycount-=1;
+    }
+    if(batterycount>=16)
+    {
+      batterylow=1;
+      batterycount=8;
+    }
+    if(batterycount<=0)
+    {
+      batterylow=0;
+      batterycount=8;
+    }
+  
     if (m == 0)
       digitalWrite(11, 1);
     if (m == 1)
@@ -293,7 +314,31 @@ void loop() {
 
     digitalWrite(11, 0);
   }
-  else if (t == 'A') { // no signal then off
+  else if (t == 'A') 
+  { // no signal then off
+   
+     battery=readVcc();               // FROM HERE 
+   //Serial.println(battery);
+    if(battery<4780)
+    {
+      batterycount+=1;
+    }
+    else
+    {
+      batterycount-=1;
+    }
+    if(batterycount>=16)                  //   CHECKING BATTERY WHEN NO SIGNAL 
+    {
+      batterylow=1;
+      batterycount=8;
+    }
+    if(batterycount<=0)
+    {
+      batterylow=0;
+      batterycount=8;
+    }                                 // TO HERE
+  
+   
     n = n + 1;
     if ((n >= 20) && (n <= 22)) {
       //n = 0;
@@ -416,6 +461,36 @@ void loop() {
   }                           // to here
 
 
+if(batterylow==1)
+{ 
+  battimecount+=1;
+  if(battimecount>=25)
+  {
+    digitalWrite(7,1);
+    digitalWrite(8,1);
+  }
+  if(battimecount>=50)
+  {
+    digitalWrite(7,0);
+    digitalWrite(8,0);
+    battimecount=0;
+  }
+}
 
   delay(5);
 }
+
+long readVcc() 
+{ long result;
+// Read 1.1V reference against AVcc 
+ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1); 
+//delay(2); 
+// Wait for Vref to settle 
+ADCSRA |= _BV(ADSC); 
+// Convert 
+while (bit_is_set(ADCSRA,ADSC)); 
+result = ADCL; 
+result |= ADCH<<8; 
+result = 1126400L / result; 
+// Back-calculate AVcc in mV 
+return result; }
