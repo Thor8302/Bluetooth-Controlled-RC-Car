@@ -1,5 +1,5 @@
-// ghini new for remote
-// 14/5/2021
+// ghini  central angle changed to 112° langle and rangle remains the same as 136° and 86° respectively
+//and also delay time changed accordingly  with respect to remote and phone to 5
 #include<Servo.h>
 char t;
 int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0,sgnlcnt=0,sgnl=0,rangle=87,langle=136;
@@ -36,7 +36,7 @@ if(Serial.available()){
   langle=map(s,97,106,136,113);
                                                      /// angle setting from remote
   if((s>=107)&&(s<=116))
-  rangle=map(s,107,116,109,87);
+  rangle=map(s,107,116,111,87);
 //Serial.println(langle);
 //Serial.print(rangle);
 }                                     //// to here
@@ -60,7 +60,7 @@ if((s>=48)&&(s<=57))
 if(t == 'F'){            //move forward
    
 
-  steer.write(111);
+  steer.write(112);
   digitalWrite(2,HIGH);
   digitalWrite(3,LOW);
   digitalWrite(8,HIGH);
@@ -79,7 +79,7 @@ if(t == 'F'){            //move forward
 else if(t == 'B'){      //move reverse 
   
  
-  steer.write(111);
+  steer.write(112);
   digitalWrite(3,HIGH);
   digitalWrite(2,LOW);
   digitalWrite(8,LOW);
@@ -183,7 +183,7 @@ else if(t == 'I'){  //forward right
 else if(t == 'S'){      //STOP (all motors stop)
   digitalWrite(11,m);
   digitalWrite(8,flght);
-  steer.write(111);
+  steer.write(112);
   langle=136;
   rangle=87;
   n=0;
@@ -214,7 +214,7 @@ else if(t=='x'){
 else if(t=='V'||t=='v'){  // emergency all off
   digitalWrite(2,LOW);
   digitalWrite(3,LOW);
-  steer.write(111);
+  steer.write(112);
   digitalWrite(8,LOW);
   n=0;
   m=0;
@@ -235,7 +235,7 @@ else if(t=='A'){   // no signal then off
     digitalWrite(11,0);
     digitalWrite(8,0);
     }
-    steer.write(111);
+    steer.write(112);
   }
 }
 
@@ -291,5 +291,5 @@ if(sgnl==1){                 // from here
 
 
 
-delay(10);           
+delay(5);           
 }
