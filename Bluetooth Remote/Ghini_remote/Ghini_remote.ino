@@ -1,7 +1,7 @@
 /*
                GHINI REMOTE PROTOCOL
-               remote code delay time reduced to 69
-               18/5/2021
+               aur remote for left 47->32 aur right ke liye 97->112 use karta hai
+               20/5/2021
 */
 
 int mtrspeed,steer,light,park,strangleint,parkkey,lightkey;
@@ -36,24 +36,30 @@ void loop() {
     else
     Serial.println(mtrspeed);
 
-if(steer>700){                      //check for right
+if(steer>=630){                      //check for right
   strvalue='R';
-  strangleint=map(steer,600,990,107,116);//and angle int value
+  strangleint=map(steer,630,950,97,112);//and angle int value
 }
-else if(steer<300){                  // check for left
+else if(steer<=320){                  // check for left
   strvalue='L';
-  strangleint=map(steer,0,400,97,106); // and angle int value
+  strangleint=map(steer,0,320,32,47); // and angle int value
 }
 else{
   strvalue='S';
-  strangleint=106;
+  strangleint=75;
 }
 
 
-if(strangleint<98)
-strangleint=98;
-if(strangleint>116)
-strangleint=116;
+if(strangleint<32)
+strangleint=32;
+else if (strangleint==75)
+strangleint=75;
+else if((strangleint<97)&&(strangleint>72))
+strangleint=97;
+else if((strangleint<72)&&(strangleint>47))
+strangleint=47;
+else if(strangleint>112)
+strangleint=112;
 strangle= char (strangleint);
 Serial.println(strangle);             // and sending angle value in char
 
