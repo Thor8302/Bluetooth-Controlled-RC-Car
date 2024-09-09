@@ -1,11 +1,11 @@
 /*
-        Lamourghini Aventador 30/5/2021
-        ghini code updated :- speed introduced before polarity for motor. but is still in trial.
+       Lamourghini Aventador 30/5/2021
+        ghini code updated :- speed introduced before polarity for motor. but is still in trial 2
 */
 #include<Servo.h>
 char t;
 int m = 1, n = 0, mtrdrv = 0, mtrcnt = 0, fcnt = 0, flght = 0, sgnlcnt = 0, sgnl = 0, angle = 24, remotelock = 0, once = 0;
-int s = 0, speed = 0;
+int s = 0, speed = 0,frmtrh=0,brmtrh=0;
 Servo steer;
 void setup() {
   steer.attach(4);
@@ -73,12 +73,33 @@ void loop() {
 
   if (t == 'F') {          //move forward
 
+      if(brmtrh==1)
+    {
+      analogWrite(5,speed/2);
+      steer.write(111);
+      digitalWrite(11, HIGH);
+      digitalWrite(3, LOW);
+      digitalWrite(8, 0);
+      digitalWrite(7, 0);
+      delay(10);
+      brmtrh=0;
+    }
+  
+    
     if (speed == 255)
-      digitalWrite(5, 1);
-
+      {
+        digitalWrite(5, 1);
+        frmtrh=1;
+      }
     else
+    {
       analogWrite(5, speed);
-
+      if(speed>=179)
+      frmtrh=1;
+      else
+      frmtrh=0;
+    }  
+    
     steer.write(111);
     digitalWrite(11, HIGH);
     digitalWrite(3, LOW);
@@ -95,11 +116,30 @@ void loop() {
 
   else if (t == 'B') {    //move reverse
 
+    if(frmtrh==1)
+    {
+      analogWrite(3,speed/2);
+      steer.write(111);
+    digitalWrite(11, HIGH);
+    digitalWrite(5, LOW);
+    delay(10);
+    frmtrh=0;
+    }
+    
     if (speed == 255)
-      digitalWrite(3, 1);
+      {
+        digitalWrite(3, 1);
+        brmtrh=1;
+      }
     else
+    {
       analogWrite(3, speed);
-
+      if(speed>=179)
+      brmtrh=1;
+      else
+      brmtrh=0;
+    }
+  
     steer.write(111);
     digitalWrite(11, HIGH);
     digitalWrite(5, LOW);
@@ -121,7 +161,8 @@ void loop() {
     steer.write(111 + angle);
     //digitalWrite(8,LOW);
     m = 1;
-
+frmtrh=0;
+brmtrh=0;
     n = 0;
 
   }
@@ -134,18 +175,39 @@ void loop() {
     steer.write(111 - angle);
     //digitalWrite(8,LOW);
     m = 1;
-
+frmtrh=0;
+brmtrh=0;
     n = 0;
 
   }
 
   else if (t == 'G') {  //forward left
 
-    if (speed == 255)
-      digitalWrite(5, 1);
-    else
-      analogWrite(5, speed);
+if(brmtrh==1)
+{
+  analogWrite(5,speed/2);
+  digitalWrite(11, HIGH);
+    digitalWrite(3, LOW);
+    steer.write(111 + angle);
+    digitalWrite(8, 0);
+    digitalWrite(7, 0);
+    delay(10);
+    brmtrh=0;
+}
 
+    if (speed == 255)
+      {
+        digitalWrite(5, 1);
+        frmtrh=1;
+      }
+    else
+    {
+      analogWrite(5, speed);
+      if(speed>=179)
+      frmtrh=1;
+      else
+      frmtrh=0;
+    }
     digitalWrite(11, HIGH);
     digitalWrite(3, LOW);
     steer.write(111 + angle);
@@ -160,11 +222,31 @@ void loop() {
   }
   else if (t == 'I') { //forward right
 
+  if(brmtrh==1)
+  {
+    analogWrite(5,speed/2);
+    digitalWrite(3, LOW);
+    digitalWrite(11, HIGH);
+    steer.write(111 - angle);
+    digitalWrite(8, 0);
+    digitalWrite(7, 0);
+    delay(10);
+    brmtrh=0;
+  }
+  
     if (speed == 255)
-      digitalWrite(5, 1);
+      {
+        digitalWrite(5, 1);
+        frmtrh=1;
+      }
     else
+    {
       analogWrite(5, speed);
-
+      if(speed>=179)
+      frmtrh=1;
+      else
+      frmtrh=0;
+    }
     digitalWrite(3, LOW);
     digitalWrite(11, HIGH);
     steer.write(111 - angle);
@@ -178,11 +260,30 @@ void loop() {
   }
   else if (t == 'H') { //backward left
 
-    if (speed == 555)
-      digitalWrite(3, 1);
-    else
-      analogWrite(3, speed);
+if(frmtrh==1)
+{
+  analogWrite(3,speed/2);
+  digitalWrite(11, HIGH);
+    digitalWrite(5, LOW);
+    steer.write(111 + angle);
+    delay(10);
+    frmtrh=0;
+}
 
+    if (speed == 255)
+      {
+        digitalWrite(3, 1);
+        brmtrh=1;
+      }
+    else
+    {
+      analogWrite(3, speed);
+      if(speed>=179)
+      brmtrh=1;
+      else
+      brmtrh=0;
+    }
+  
     digitalWrite(11, HIGH);
     digitalWrite(5, LOW);
     steer.write(111 + angle);
@@ -195,11 +296,30 @@ void loop() {
   }
   else if (t == 'J') { //backward right
 
-    if (speed == 255)
-      digitalWrite(3, 1);
-    else
-      analogWrite(3, speed);
+if(frmtrh==1)
+{
+  analogWrite(3,speed/2);
+  steer.write(111 - angle);
+    digitalWrite(11, HIGH);
+    digitalWrite(5, LOW);
+    delay(10);
+    frmtrh=0;
+}
 
+    if (speed == 255)
+      {
+        digitalWrite(3, 1);
+        brmtrh=1;
+      }
+    else
+    {
+      analogWrite(3, speed);
+      if(speed>=179)
+      brmtrh=1;
+      else
+      brmtrh=0;
+    }
+  
     steer.write(111 - angle);
     digitalWrite(11, HIGH);
     digitalWrite(5, LOW);
@@ -220,6 +340,8 @@ void loop() {
       digitalWrite(11, 0);
     digitalWrite(8, flght);
     digitalWrite(7, flght);
+  frmtrh=0;
+  brmtrh=0;
     steer.write(111);
     // angle = 25;
 
