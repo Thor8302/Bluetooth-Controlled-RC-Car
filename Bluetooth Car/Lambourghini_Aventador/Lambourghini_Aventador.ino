@@ -1,21 +1,20 @@
 /*
-        Lamourghini Aventador 8/6/2021
-        GHINI : LEFT ANGLE INCREASED BY 1
-*/
-#include<Servo.h>
+       Lamourghini Aventador 10/6/2021
+       ghini : minor updates (parking lights bugs removed,speed value made zero on left ,right ,stop , specific
+*/#include<Servo.h>
 char t;
 int m = 1, n = 0, mtrdrv = 0, mtrcnt = 0, fcnt = 0, flght = 0, sgnlcnt = 0, sgnl = 0, angle = 24, remotelock = 0, once = 0;
-int s = 0, speed = 0;
+int s = 0, speed = 0, blu = 0;
 Servo steer;
 void setup() {
   steer.attach(4);
   pinMode(5, OUTPUT);  //forward
   pinMode(3, OUTPUT);  // reverse
   pinMode(11, OUTPUT); //accelerator
-  pinMode(A1, INPUT);   //from motordrive to switch on bluetooth
-  pinMode(6, OUTPUT);  //bluetooth on/off
+  pinMode(15, OUTPUT);   //bluetooth
   pinMode(8, OUTPUT);  //front light on/off
   pinMode(7, OUTPUT);  //front light on/off BOTH FOR BETTER GRND
+  digitalWrite(15, 1);
   Serial.begin(9600);
 
 }
@@ -25,14 +24,17 @@ void loop() {
   if (Serial.available()) {
     t = Serial.read();
     s = int (t);
-    Serial.println(t);
-    Serial.println(s);
+    //Serial.println( readVcc(), DEC );
+    //Serial.println( readTemp(), DEC );
+    // Serial.println(t);
+    //Serial.println(s);
     //Serial.println(langle);
     //Serial.println(rangle);
     once = 0;
   }
 
-
+  if (t != 'A')
+    blu = 1;        // means bluetooth was once connected.
 
 
   if (t == 'K')
@@ -73,17 +75,17 @@ void loop() {
 
   if (t == 'F') {          //move forward
 
-    
+
     if (speed == 255)
-      {
-        digitalWrite(11, 1);
-      }
+    {
+      digitalWrite(11, 1);
+    }
     else
     {
       analogWrite(11, speed);
-    }  
-    
-    steer.write(111);
+    }
+
+    steer.write(112);
     digitalWrite(5, HIGH);
     digitalWrite(3, LOW);
     digitalWrite(8, 0);
@@ -100,16 +102,16 @@ void loop() {
   else if (t == 'B') {    //move reverse
 
     if (speed == 255)
-      {
-        digitalWrite(11, 1);
+    {
+      digitalWrite(11, 1);
 
-      }
+    }
     else
     {
       analogWrite(11, speed);
- }
-  
-    steer.write(111);
+    }
+
+    steer.write(112);
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
     //  digitalWrite(8, LOW);
@@ -139,7 +141,7 @@ void loop() {
       digitalWrite(11, 0);
     if (m == 0)
       digitalWrite(11, 1);
-    steer.write(111 - angle);
+    steer.write(112 - angle);
     //digitalWrite(8,LOW);
     m = 1;
     n = 0;
@@ -148,15 +150,15 @@ void loop() {
 
   else if (t == 'G') {  //forward left
 
-  if (speed == 255)
-      {
-        digitalWrite(11, 1);
+    if (speed == 255)
+    {
+      digitalWrite(11, 1);
 
-      }
+    }
     else
     {
       analogWrite(11, speed);
-}
+    }
     digitalWrite(5, HIGH);
     digitalWrite(3, LOW);
     steer.write(112 + angle);
@@ -171,18 +173,18 @@ void loop() {
   }
   else if (t == 'I') { //forward right
 
-  if (speed == 255)
-      {
-        digitalWrite(11, 1);
+    if (speed == 255)
+    {
+      digitalWrite(11, 1);
 
-      }
+    }
     else
     {
       analogWrite(11, speed);
-  }
+    }
     digitalWrite(3, LOW);
     digitalWrite(5, HIGH);
-    steer.write(111 - angle);
+    steer.write(112 - angle);
     digitalWrite(8, 0);
     digitalWrite(7, 0);
     fcnt = 0;
@@ -192,16 +194,16 @@ void loop() {
     n = 0;
   }
   else if (t == 'H') { //backward left
-  if (speed == 255)
-      {
-        digitalWrite(11, 1);
+    if (speed == 255)
+    {
+      digitalWrite(11, 1);
 
-      }
+    }
     else
     {
       analogWrite(11, speed);
-}
-  
+    }
+
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
     steer.write(112 + angle);
@@ -214,16 +216,16 @@ void loop() {
   }
   else if (t == 'J') { //backward right
     if (speed == 255)
-      {
-        digitalWrite(11, 1);
+    {
+      digitalWrite(11, 1);
 
-      }
+    }
     else
     {
       analogWrite(11, speed);
-}
-  
-    steer.write(111 - angle);
+    }
+
+    steer.write(112 - angle);
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
     //  digitalWrite(8, LOW);
@@ -243,7 +245,7 @@ void loop() {
       digitalWrite(11, 0);
     digitalWrite(8, flght);
     digitalWrite(7, flght);
-    steer.write(111);
+    steer.write(112);
     // angle = 25;
 
     n = 0;
@@ -278,7 +280,7 @@ void loop() {
   else if (t == 'V' || t == 'v') { // emergency all off
     digitalWrite(5, LOW);
     digitalWrite(3, LOW);
-    steer.write(111);
+    steer.write(112);
     digitalWrite(8, 1);
     digitalWrite(7, 1);
     n = 0;
@@ -288,7 +290,13 @@ void loop() {
     digitalWrite(11, 0);
   }
   else if (t == 'A') { // no signal then off
-
+    if (blu == 1)
+    {
+      blu = 0;
+      digitalWrite(15, 0);
+      delay(10);
+      digitalWrite(15, 1);
+    }
     n = n + 1;
     if ((n >= 20) && (n <= 22)) {
       //n = 0;
@@ -303,7 +311,7 @@ void loop() {
         digitalWrite(7, 1);
         angle = 25;
       }
-      steer.write(111);
+      steer.write(112);
       if (once == 0)
       {
         digitalWrite(6, 0);
@@ -329,21 +337,6 @@ void loop() {
   {
     flght = m;
   }                            //to here ....
-  mtrdrv = analogRead(A1); //reading input at A1 coming from motordrive's 5volt   from here .....
-  if (mtrdrv <= 100)        //if <=200 switch off bluetooth on count of 100
-  {
-    mtrcnt = mtrcnt + 1;
-    if (mtrcnt >= 1000)
-    {
-      digitalWrite(6, 0);
-      mtrcnt == 0;
-    }
-  }                       //if >=200 stay on                                process for switching bluetooth on/off
-  else if (mtrdrv >= 200)
-  {
-    digitalWrite(6, 1);   // purpose:-to establish wired connection with laptop
-    mtrcnt == 0;          // without opening car                                   to here .....
-  }
   if (sgnl == 1) {             // from here
     sgnlcnt = sgnlcnt + 1;
     if ((sgnlcnt >= 25 ) && (sgnlcnt < 1000)) {
@@ -356,7 +349,7 @@ void loop() {
       flght = 1;
       sgnlcnt = 1000;
     }
-    if (sgnlcnt >= 1200) {
+    if ((sgnlcnt >= 1200)&&(sgnlcnt < 1225)) {
       digitalWrite(8, 0);
       digitalWrite(7, 0);
       digitalWrite(5, 0);
@@ -365,7 +358,7 @@ void loop() {
       flght = 0;
       m = 0;
     }
-    if (sgnlcnt >= 1225) {
+    if ((sgnlcnt >= 1225)&&(sgnlcnt < 1250)) {
       digitalWrite(8, 1);
       digitalWrite(7, 1);
       digitalWrite(5, 0);
@@ -374,7 +367,7 @@ void loop() {
       flght = 1;
       m = 1;
     }
-    if (sgnlcnt >= 1250) {
+    if ((sgnlcnt >= 1250)&&(sgnlcnt < 1275)) {
       digitalWrite(8, 0);
       digitalWrite(7, 0);
       digitalWrite(5, 0);
@@ -383,7 +376,7 @@ void loop() {
       flght = 0;
       m = 0;
     }
-    if (sgnlcnt >= 1275) {
+    if ((sgnlcnt >= 1275)&&(sgnlcnt < 1300)) {
       digitalWrite(8, 1);
       digitalWrite(7, 1);
       digitalWrite(5, 1);
@@ -393,7 +386,7 @@ void loop() {
       m = 1;
       // sgnlcnt = 0;
     }
-    if (sgnlcnt >= 1300) {
+    if ((sgnlcnt >= 1300)&&(sgnlcnt < 1325)) {
       digitalWrite(8, 1);
       digitalWrite(7, 1);
       digitalWrite(5, 0);
@@ -419,3 +412,36 @@ void loop() {
 
   delay(5);
 }
+
+/*float readVcc()
+  { long result;
+  float volt;
+  // Read 1.1V reference against AVcc
+  ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
+  delay(2);
+  // Wait for Vref to settle
+  ADCSRA |= _BV(ADSC);
+  // Convert
+  while (bit_is_set(ADCSRA,ADSC));
+  result = ADCL;
+  result |= ADCH<<8;
+  result = 1126400L / result;
+  // Back-calculate AVcc in mV
+  volt= result;
+  volt=volt/1000;
+  return volt; }
+
+  float readTemp()
+  { long result; // Read temperature sensor against 1.1V reference
+  float temp;
+  ADMUX = _BV(REFS1) | _BV(REFS0) | _BV(MUX3);
+  delay(6); // Wait for Vref to settle
+  ADCSRA |= _BV(ADSC); //Convert
+  while (bit_is_set(ADCSRA,ADSC));
+  result = ADCL;
+  result |= ADCH<<8;
+  result = (result - 125) * 1075;
+  temp=result;
+  temp=temp/10000;
+  return temp; }
+*/
