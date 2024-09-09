@@ -1,6 +1,6 @@
 /*
        Lamourghini Aventador 1/2/2022
-       GHINI : UPDATED BATTERY CHECK INTRODUCED FRONT CONSTANTLY BLINKING WHEN BATTERY LOW
+       GHINI : UPDATE STILL REQUIRED FOR BATTERY VALUE FOR LOW CONDITION.
 */
 #include<Servo.h>
 char t;
@@ -245,7 +245,7 @@ void loop() {
   
     battery=readVcc();
    //Serial.println(battery);
-    if(battery<4780)
+    if(battery<4299)
     {
       batterycount+=1;
     }
@@ -319,7 +319,7 @@ void loop() {
    
      battery=readVcc();               // FROM HERE 
    //Serial.println(battery);
-    if(battery<4780)
+    if(battery<4299)
     {
       batterycount+=1;
     }
