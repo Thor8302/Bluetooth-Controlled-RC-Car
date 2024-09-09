@@ -1,5 +1,5 @@
 /*
-        Lamourghini Aventador 4/5/2021
+        Lamourghini Aventador 4/6/2021
         ghini :- one of the previous update for less power drainage made an error of board switching off on sudden polarity change ,now regained . (motorspeed pin back to normal use) 
 */
 #include<Servo.h>
