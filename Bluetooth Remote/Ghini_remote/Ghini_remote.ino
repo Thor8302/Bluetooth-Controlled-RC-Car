@@ -1,9 +1,9 @@
 /*
-               GHINI REMOTE PROTOCOL 1/2/2022
-               GHINI REMOTE : RECALIBRATED
+               GHINI REMOTE PROTOCOL  13/3/2022
+               ghini remote update : values updated after modification of remote
 */
 
-int mtrspeed, steer, light, park, strangleint, parkkey, lightkey;
+int mtrspeed, steer, light, park, strangleint, parkkey, lightkey,mtrcntrf=430,mtrcntrb=560,strcntrr=420,strcntrl=700;
 char mtrvalue, strvalue, strangle, parkvalue = 'x', lightvalue = 'w', mtrspeedchar;
 void setup() {
   pinMode(A6, INPUT);
@@ -21,21 +21,21 @@ void loop() {
   steer = analogRead(A7);
   light = analogRead(A4);
   park = analogRead(A2);
-   /*
-  Serial.print("mtr :");
-  Serial.println(mtrspeed);
-  Serial.print("steer");
-  Serial.println(steer);
+  
+  // Serial.print("mtr :");
+  // Serial.println(mtrspeed);
+  // Serial.print("steer");
+  // Serial.println(steer);
 
-  */
+  
 
-  if (mtrspeed >= 710) {         //  check for forward
+  if (mtrspeed <= mtrcntrf) {         //  check for forward
     mtrvalue = 'F';                       // and speed accordingly
-    mtrspeed = map(mtrspeed, 710, 1015, 32, 64);
+    mtrspeed = map(mtrspeed, mtrcntrf, 0, 32, 64);
   }
-  else if (mtrspeed <= 335) {    //check for backward
+  else if (mtrspeed >= mtrcntrb) {    //check for backward
     mtrvalue = 'B';                         // and speed accordingly
-    mtrspeed = map(mtrspeed, 0, 335, 64, 32);
+    mtrspeed = map(mtrspeed, mtrcntrb, 1015, 32, 64);
   }
   else {
     mtrvalue = 'S';                      // else speed
@@ -47,15 +47,15 @@ void loop() {
     mtrspeed = 32;
   mtrspeedchar = char(mtrspeed);
   Serial.println(mtrspeedchar);               // sending motor speed
-  // Serial.print("steer=");
-  //Serial.println(steer);
-  if (steer >= 420) {                  //check for right
-    strvalue = 'R';
-    strangleint = map(steer, 420, 570, 89, 113); //and angle int value
-  }
-  else if (steer <= 150) {              // check for left
+  /// Serial.print("steer=");
+  ////Serial.println(steer);
+  if (steer >= strcntrl) {                  //check for right
     strvalue = 'L';
-    strangleint = map(steer, 0, 150, 113, 89); // and angle int value
+    strangleint = map(steer, strcntrl, 1000, 89, 113); //and angle int value
+  }
+  else if (steer <= strcntrr) {              // check for left
+    strvalue = 'R';
+    strangleint = map(steer, 0, strcntrr, 113, 89); // and angle int value
   }
   else {
     strvalue = 'S';
