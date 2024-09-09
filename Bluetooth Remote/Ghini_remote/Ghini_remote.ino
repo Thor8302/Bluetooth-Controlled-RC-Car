@@ -1,6 +1,6 @@
 /*
-               GHINI REMOTE PROTOCOL 2/12/2021
-               ghini remote : recalibrated
+               GHINI REMOTE PROTOCOL 1/2/2022
+               GHINI REMOTE : RECALIBRATED
 */
 
 int mtrspeed, steer, light, park, strangleint, parkkey, lightkey;
@@ -21,12 +21,14 @@ void loop() {
   steer = analogRead(A7);
   light = analogRead(A4);
   park = analogRead(A2);
-  /*  Serial.print("mtr :");
-    Serial.println(mtrspeed);
-    Serial.print("steer");
-    Serial.println(steer);
-    
+   /*
+  Serial.print("mtr :");
+  Serial.println(mtrspeed);
+  Serial.print("steer");
+  Serial.println(steer);
+
   */
+
   if (mtrspeed >= 710) {         //  check for forward
     mtrvalue = 'F';                       // and speed accordingly
     mtrspeed = map(mtrspeed, 710, 1015, 32, 64);
@@ -45,15 +47,15 @@ void loop() {
     mtrspeed = 32;
   mtrspeedchar = char(mtrspeed);
   Serial.println(mtrspeedchar);               // sending motor speed
- // Serial.print("steer=");
+  // Serial.print("steer=");
   //Serial.println(steer);
   if (steer >= 420) {                  //check for right
     strvalue = 'R';
-    strangleint = map(steer, 420, 665, 89, 113); //and angle int value
+    strangleint = map(steer, 420, 570, 89, 113); //and angle int value
   }
-  else if (steer <= 225) {              // check for left
+  else if (steer <= 150) {              // check for left
     strvalue = 'L';
-    strangleint = map(steer, 0, 225, 113, 89); // and angle int value
+    strangleint = map(steer, 0, 150, 113, 89); // and angle int value
   }
   else {
     strvalue = 'S';
@@ -150,9 +152,9 @@ void loop() {
     }
   }
 
-if((park<60)&&(light<60))
-digitalWrite(A3,0);
-else
-digitalWrite(A3,1);
+  if ((park < 60) && (light < 60))
+    digitalWrite(A3, 0);
+  else
+    digitalWrite(A3, 1);
   delay(69);
 }
