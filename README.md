@@ -5,7 +5,7 @@
 This project is a Bluetooth-controlled RC car modeled after the Lamborghini Aventador. It utilizes an Arduino-based system to control the car's movement via Bluetooth using a remote device (e.g., smartphone). The car can move forward, backward, turn left, right, and stop. The project has been maintained since 2021 and includes multiple iterations and improvements over time.
 
 ## Images
-![IMG_20240330_034326](https://github.com/user-attachments/assets/1f934a55-3520-41f5-90e7-8b03c2373f3c)
+![IMG20220825005330](https://github.com/user-attachments/assets/1f934a55-3520-41f5-90e7-8b03c2373f3c)
 ![IMG20220825005501](https://github.com/user-attachments/assets/b8b22c71-f689-4baa-99a6-417d9c7783da)
 
 ## Demo Videos
