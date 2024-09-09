@@ -7,7 +7,7 @@ This project is a Bluetooth-controlled RC car modeled after the Lamborghini Aven
 ## Images
 ![IMG20220825005330](https://github.com/user-attachments/assets/1f934a55-3520-41f5-90e7-8b03c2373f3c)
 ![IMG20220825005501](https://github.com/user-attachments/assets/b8b22c71-f689-4baa-99a6-417d9c7783da)
-
+![IMG_20240330_034326](https://github.com/Thor8302/Bluetooth-Controlled-RC-Car/blob/main/drive_upload/IMG_20240330_034326.jpg)
 ## Demo Videos
 
 ## Features
