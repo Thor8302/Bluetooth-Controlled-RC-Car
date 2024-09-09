@@ -1,7 +1,6 @@
 /*
-               GHINI REMOTE PROTOCOL 30/5/2021
-               ghini remote updated angle description improved , motion description improved
-               and also the light values are initialized automatically
+               GHINI REMOTE PROTOCOL 7/6/2021
+               ghini remote updated after steering lever fixed properly
 */
 
 int mtrspeed, steer, light, park, strangleint, parkkey, lightkey;
@@ -19,13 +18,13 @@ void loop() {
   steer = analogRead(A7);
   light = analogRead(A4);
   park = analogRead(A2);
-  if (mtrspeed > 700) {         //  check for forward
+  if (mtrspeed >= 630) {         //  check for forward
     mtrvalue = 'F';                       // and speed accordingly
-    mtrspeed = map(mtrspeed, 700, 1015, 32, 64);
+    mtrspeed = map(mtrspeed, 630, 1015, 32, 64);
   }
-  else if (mtrspeed < 400) {    //check for backward
+  else if (mtrspeed <= 430) {    //check for backward
     mtrvalue = 'B';                         // and speed accordingly
-    mtrspeed = map(mtrspeed, 5, 400, 64, 32);
+    mtrspeed = map(mtrspeed, 0, 420, 64, 32);
   }
   else {
     mtrvalue = 'S';                      // else speed
@@ -38,13 +37,13 @@ void loop() {
     mtrspeedchar= char(mtrspeed);
     Serial.println(mtrspeedchar);               // sending motor speed
 
-  if (steer >= 630) {                  //check for right
+  if (steer >= 440) {                  //check for right
     strvalue = 'R';
-    strangleint = map(steer, 630, 950, 89, 113); //and angle int value
+    strangleint = map(steer, 440, 665, 89, 113); //and angle int value
   }
-  else if (steer <= 320) {              // check for left
+  else if (steer <= 225) {              // check for left
     strvalue = 'L';
-    strangleint = map(steer, 0, 320, 113, 89); // and angle int value
+    strangleint = map(steer, 0, 225, 113, 89); // and angle int value
   }
   else {
     strvalue = 'S';
