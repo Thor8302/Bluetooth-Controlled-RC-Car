@@ -1,11 +1,12 @@
 /*
-      Lamourghini Aventador 28/6/2021
-      GHINI : updated bluetooth on/off
+        Lamourghini Aventador 20/7/2021
+        ghini update : new servo fixed so angle values changed
+        249 is reduced to 246 due to strain possibility
 */
 #include<Servo.h>
 char t;
-int m = 1, n = 0, mtrdrv = 0, mtrcnt = 0, fcnt = 0, flght = 0, sgnlcnt = 0, sgnl = 0, angle = 24, remotelock = 0, once = 0;
-int s = 0, speed = 0, blu = 0;
+int m = 1, n = 0, mtrdrv = 0, mtrcnt = 0, fcnt = 0, flght = 0, sgnlcnt = 0, sgnl = 0, angle = 24, remotelock = 0;
+int s = 0, speed = 0, blu = 0, center = 108;
 Servo steer;
 void setup() {
   steer.attach(4);
@@ -27,11 +28,11 @@ void loop() {
     s = int (t);
     //Serial.println( readVcc(), DEC );
     //Serial.println( readTemp(), DEC );
-    // Serial.println(t);
+    //Serial.println(t);
     //Serial.println(s);
     //Serial.println(langle);
     //Serial.println(rangle);
-    once = 0;
+
   }
 
   if (t != 'A')
@@ -86,7 +87,7 @@ void loop() {
       analogWrite(11, speed);
     }
 
-    steer.write(112);
+    steer.write(center);
     digitalWrite(5, HIGH);
     digitalWrite(3, LOW);
     digitalWrite(8, 0);
@@ -112,7 +113,7 @@ void loop() {
       analogWrite(11, speed);
     }
 
-    steer.write(112);
+    steer.write(center);
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
     //  digitalWrite(8, LOW);
@@ -130,7 +131,7 @@ void loop() {
       digitalWrite(11, 0);
     if (m == 0)
       digitalWrite(11, 1);
-    steer.write(112 + angle);
+    steer.write(center + angle);
     //digitalWrite(8,LOW);
     m = 1;
     n = 0;
@@ -142,7 +143,7 @@ void loop() {
       digitalWrite(11, 0);
     if (m == 0)
       digitalWrite(11, 1);
-    steer.write(112 - angle);
+    steer.write(center - angle);
     //digitalWrite(8,LOW);
     m = 1;
     n = 0;
@@ -162,7 +163,7 @@ void loop() {
     }
     digitalWrite(5, HIGH);
     digitalWrite(3, LOW);
-    steer.write(112 + angle);
+    steer.write(center + angle);
     digitalWrite(8, 0);
     digitalWrite(7, 0);
     fcnt = 0;
@@ -185,7 +186,7 @@ void loop() {
     }
     digitalWrite(3, LOW);
     digitalWrite(5, HIGH);
-    steer.write(112 - angle);
+    steer.write(center - angle);
     digitalWrite(8, 0);
     digitalWrite(7, 0);
     fcnt = 0;
@@ -207,7 +208,7 @@ void loop() {
 
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
-    steer.write(112 + angle);
+    steer.write(center + angle);
     //  digitalWrite(8, LOW);
     // fcnt = 100;
     sgnl = 0;
@@ -226,7 +227,7 @@ void loop() {
       analogWrite(11, speed);
     }
 
-    steer.write(112 - angle);
+    steer.write(center - angle);
     digitalWrite(3, HIGH);
     digitalWrite(5, LOW);
     //  digitalWrite(8, LOW);
@@ -246,7 +247,7 @@ void loop() {
       digitalWrite(11, 0);
     digitalWrite(8, flght);
     digitalWrite(7, flght);
-    steer.write(112);
+    steer.write(center);
     // angle = 25;
 
     n = 0;
@@ -281,7 +282,7 @@ void loop() {
   else if (t == 'V' || t == 'v') { // emergency all off
     digitalWrite(5, LOW);
     digitalWrite(3, LOW);
-    steer.write(112);
+    steer.write(center);
     digitalWrite(8, 1);
     digitalWrite(7, 1);
     n = 0;
@@ -296,16 +297,20 @@ void loop() {
       //n = 0;
       m = 1;
 
+      if (blu == 1)
+      {
+        blu = 0;
+        digitalWrite(12, 1);
+        delay(10);
+        digitalWrite(12, 0);
+      }
+
+
       if (sgnl == 0)
       {
-         if (blu == 1)
-    {
-      blu = 0;
-      digitalWrite(12, 1);
-      delay(10);
-      digitalWrite(12, 0);
-    }
-   
+
+
+
         digitalWrite(5, LOW);
         digitalWrite(3, LOW);
         digitalWrite(11, 1);
@@ -313,14 +318,8 @@ void loop() {
         digitalWrite(7, 1);
         angle = 25;
       }
-      steer.write(112);
-      if (once == 0)
-      {
-        digitalWrite(6, 0);
-        delay(10);
-        digitalWrite(6, 1);
-        once = 1;
-      }
+      steer.write(center);
+
     }
   }
 
@@ -351,7 +350,7 @@ void loop() {
       flght = 1;
       sgnlcnt = 1000;
     }
-    if ((sgnlcnt >= 1200)&&(sgnlcnt < 1225)) {
+    if ((sgnlcnt >= 1200) && (sgnlcnt < 1225)) {
       digitalWrite(8, 0);
       digitalWrite(7, 0);
       digitalWrite(5, 0);
@@ -360,7 +359,7 @@ void loop() {
       flght = 0;
       m = 0;
     }
-    if ((sgnlcnt >= 1225)&&(sgnlcnt < 1250)) {
+    if ((sgnlcnt >= 1225) && (sgnlcnt < 1250)) {
       digitalWrite(8, 1);
       digitalWrite(7, 1);
       digitalWrite(5, 0);
@@ -369,7 +368,7 @@ void loop() {
       flght = 1;
       m = 1;
     }
-    if ((sgnlcnt >= 1250)&&(sgnlcnt < 1275)) {
+    if ((sgnlcnt >= 1250) && (sgnlcnt < 1275)) {
       digitalWrite(8, 0);
       digitalWrite(7, 0);
       digitalWrite(5, 0);
@@ -378,7 +377,7 @@ void loop() {
       flght = 0;
       m = 0;
     }
-    if ((sgnlcnt >= 1275)&&(sgnlcnt < 1300)) {
+    if ((sgnlcnt >= 1275) && (sgnlcnt < 1300)) {
       digitalWrite(8, 1);
       digitalWrite(7, 1);
       digitalWrite(5, 1);
@@ -388,7 +387,7 @@ void loop() {
       m = 1;
       // sgnlcnt = 0;
     }
-    if ((sgnlcnt >= 1300)&&(sgnlcnt < 1325)) {
+    if ((sgnlcnt >= 1300) && (sgnlcnt < 1325)) {
       digitalWrite(8, 1);
       digitalWrite(7, 1);
       digitalWrite(5, 0);
@@ -414,36 +413,3 @@ void loop() {
 
   delay(5);
 }
-
-/*float readVcc()
-  { long result;
-  float volt;
-  // Read 1.1V reference against AVcc
-  ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
-  delay(2);
-  // Wait for Vref to settle
-  ADCSRA |= _BV(ADSC);
-  // Convert
-  while (bit_is_set(ADCSRA,ADSC));
-  result = ADCL;
-  result |= ADCH<<8;
-  result = 1126400L / result;
-  // Back-calculate AVcc in mV
-  volt= result;
-  volt=volt/1000;
-  return volt; }
-
-  float readTemp()
-  { long result; // Read temperature sensor against 1.1V reference
-  float temp;
-  ADMUX = _BV(REFS1) | _BV(REFS0) | _BV(MUX3);
-  delay(6); // Wait for Vref to settle
-  ADCSRA |= _BV(ADSC); //Convert
-  while (bit_is_set(ADCSRA,ADSC));
-  result = ADCL;
-  result |= ADCH<<8;
-  result = (result - 125) * 1075;
-  temp=result;
-  temp=temp/10000;
-  return temp; }
-*/
