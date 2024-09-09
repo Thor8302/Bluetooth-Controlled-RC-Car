@@ -1,5 +1,7 @@
-// ghini  central angle changed to 112° langle and rangle remains the same as 136° and 86° respectively
-//and also delay time changed accordingly  with respect to remote and phone to 5
+//steeringvalue me 'q' bhi jata tha jo nahi jana chahiye u know y to uske wajah se remote aur car dono ka code change hua hai\
+//to car ab new values pe maping karta hai   for right 111->87 and for left 113->136
+//20/5/2021
+
 #include<Servo.h>
 char t;
 int m=0,n=0,mtrdrv=0,mtrcnt=0,fcnt=0,flght=0,sgnlcnt=0,sgnl=0,rangle=87,langle=136;
@@ -30,16 +32,16 @@ if(Serial.available()){
  
  
  
- if((s>=97)&&(s<=116))                ///  from here
-{ //Serial.println(s);
-  if((s>=97)&&(s<=106))
-  langle=map(s,97,106,136,113);
+                                    ///  from here
+ //Serial.println(s);
+  if((s>=32)&&(s<=47))
+  langle=map(s,32,47,136,113);
                                                      /// angle setting from remote
-  if((s>=107)&&(s<=116))
-  rangle=map(s,107,116,111,87);
+  if((s>=97)&&(s<=112))
+  rangle=map(s,97,112,111,87);
 //Serial.println(langle);
 //Serial.print(rangle);
-}                                     //// to here
+                                     //// to here
 
 
 if(t=='q')                 // from here ....    
