@@ -1,4 +1,4 @@
-```cpp
+
 /*
        Lamourghini Aventador 17/2/2022
        ghini update : angles changed again bcoz of errors
@@ -498,4 +498,3 @@ result |= ADCH<<8;
 result = 1126400L / result; 
 // Back-calculate AVcc in mV 
 return result; }
-```
