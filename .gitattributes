@@ -1,2 +1,2 @@
-*.cpp linguist-language=JavaScript
-*.ino linguist-language=JavaScript
+*.cpp linguist-language=C++
+*.ino linguist-language=C++
