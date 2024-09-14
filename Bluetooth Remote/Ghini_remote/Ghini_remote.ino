@@ -1,3 +1,4 @@
+
 /*
                GHINI REMOTE PROTOCOL  13/3/2022
                ghini remote update : values updated after modification of remote
